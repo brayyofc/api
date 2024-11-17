@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <div class="container">
+        <!-- Sidebar Toggle Button -->
+        <button class="menu-btn" onclick="toggleSidebar()">☰ Menu</button>
+
+        <!-- Sidebar -->
+        <div id="sidebar" class="sidebar">
+            <h2>API Features</h2>
+            <ul>
+                <li><a href="#" onclick="showContent('apiDocumentation')">View API Documentation</a></li>
+                <li><a href="#" onclick="showContent('manageApiKeys')">Manage API Keys</a></li>
+                <li><a href="#" onclick="showContent('analyticsDashboard')">Analytics Dashboard</a></li>
+                <li><a href="#" onclick="showContent('support')">Support</a></li>
+            </ul>
+            <button class="close-btn" onclick="toggleSidebar()">Close ×</button>
+        </div>
+
+        <!-- Dashboard Content -->
+        <div id="dashboardContent" class="content">
+            <h1>Dashboard</h1>
+            <p>Welcome to your dashboard. Manage your APIs and analytics here.</p>
+            <button onclick="logout()">Logout</button>
+        </div>
+
+        <!-- API Documentation Content -->
+        <div id="apiDocumentation" class="content hidden">
+            <h2>API Documentation</h2>
+            <p>Here you can find the documentation for using the APIs.</p>
+            <ul>
+                <li>API Endpoint 1: /api/v1/data</li>
+                <li>API Endpoint 2: /api/v1/status</li>
+                <li>API Endpoint 3: /api/v1/metrics</li>
+            </ul>
+        </div>
+
+        <!-- Manage API Keys Content -->
+        <div id="manageApiKeys" class="content hidden">
+            <h2>Manage API Keys</h2>
+            <p>Generate and manage your API keys here.</p>
+            <button onclick="generateApiKey()">Generate New API Key</button>
+            <div id="apiKeysList">
+                <!-- Generated API keys will be displayed here -->
+            </div>
+        </div>
+
+        <!-- Analytics Dashboard Content -->
+        <div id="analyticsDashboard" class="content hidden">
+            <h2>Analytics Dashboard</h2>
+            <p>View your API usage and performance data.</p>
+            <div id="analyticsData">
+                <p>API Calls: 1500</p>
+                <p>Active Users: 120</p>
+                <p>Errors: 5</p>
+            </div>
+        </div>
+
+        <!-- Support Content -->
+        <div id="support" class="content hidden">
+            <h2>Support</h2>
+            <p>If you need help, contact our support team.</p>
+            <p>Email: support@api.com</p>
+            <p>Phone: +1234567890</p>
+        </div>
+    </div>
+
+    <script>
+        // Redirect to login if not logged in
+        if (!localStorage.getItem("loggedInUser")) {
+            window.location.href = "login.html";
+        }
+
+        // Logout Function
+        function logout() {
+            localStorage.removeItem("loggedInUser");
+            window.location.href = "login.html";
+        }
+
+        // Toggle Sidebar
+        function toggleSidebar() {
+            const sidebar = document.getElementById("sidebar");
+            sidebar.classList.toggle("active");
+        }
+
+        // Show Content Based on Menu Click
+        function showContent(contentId) {
+            const contentSections = document.querySelectorAll('.content');
+            contentSections.forEach(section => section.classList.add('hidden'));
+
+            const selectedContent = document.getElementById(contentId);
+            selectedContent.classList.remove('hidden');
+
+            // Close Sidebar after selecting a menu
+            toggleSidebar();
+        }
+
+        // Generate API Key
+        function generateApiKey() {
+            const apiKey = 'api_' + Math.random().toString(36).substring(2, 15);
+            const apiKeysList = document.getElementById("apiKeysList");
+
+            const newKeyElement = document.createElement('div');
+            newKeyElement.classList.add('api-key-item');
+            newKeyElement.innerHTML = `
+                <p>API Key: ${apiKey} 
+                <button onclick="deleteApiKey(this)">Delete</button></p>
+            `;
+            apiKeysList.appendChild(newKeyElement);
+        }
+
+        // Delete API Key
+        function deleteApiKey(button) {
+            button.parentElement.remove();
+        }
+
+        // Show Dashboard by default
+        showContent('dashboardContent');
+    </script>
+</body>
+</html>
